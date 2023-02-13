@@ -19,6 +19,19 @@
 <body>
     <h1 class="text-center">Lista de productos.</h1>
     <main class="container">
+        <section id="addProducto">
+            <form action="http://localhost:3000/productos" method="POST">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" name="nombre" class="form-control">
+                <label for="existencias" class="form-label">Existencias:</label>
+                <input type="text" name="existencias" class="form-control">
+                <label for="precio" class="form-label">Precio:</label>
+                <input type="text" name="precio" class="form-control">
+                <label for="imagen" class="form-label">Imagen:</label>
+                <input type="text" name="imagen" class="form-control">
+                <button type="submit" class="btn btn-primary mt-3">Agregar</button>
+            </form>
+        </section>
         <section class="d-flex justify-content-center">
             <button id="btnProductos" class="btn btn-primary my-3">Consultar productos</button>
         </section>

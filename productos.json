@@ -27,6 +27,13 @@
             "existencias": 50,
             "precio": 45000,
             "imagen": "https://http2.mlstatic.com/D_NQ_NP_674972-MLC47545833175_092021-O.jpg"
+        },
+        {
+            "codigo": "f65b13",
+            "nombre": "zapatilla",
+            "existencias": "89",
+            "precio": "80000",
+            "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfZATnGVJigiDe1p_McKZ0oumTZvF4rfY-pROktZgIlL-yzhceeLYR_hsWAN8XPedqr4k&usqp=CAU"
         }
     ]
 }
