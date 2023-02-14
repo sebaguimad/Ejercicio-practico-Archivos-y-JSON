@@ -14,67 +14,89 @@
             height: auto;
         }
     </style>
-    <title>Listado de productos</title>
+    <title>Listado de estudiante e instituciones</title>
 </head>
 <body>
-    <h1 class="text-center">Lista De Articulos</h1>
+    <h1 class="text-center">Lista de Estudiantes e Instituciones</h1>
     <main class="container">
         <section id="addProducto">
-            <form action="http://localhost:3000/productos" method="POST">
+            <form action="http://localhost:3000/estudiantes" method="POST">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" class="form-control">
-                <label for="existencias" class="form-label">Existencias:</label>
-                <input type="text" name="existencias" class="form-control">
-                <label for="precio" class="form-label">Precio:</label>
-                <input type="text" name="precio" class="form-control">
-                <label for="imagen" class="form-label">Imagen:</label>
-                <input type="text" name="imagen" class="form-control">
-                <button type="submit" class="btn btn-primary mt-3">Agregar Producto</button>
+                <input type="text" name="nombre" class="form-control" value="Nombre por defecto">
+                <label for="institucion" class="form-label">Institución:</label>
+                <input type="text" name="institucion" class="form-control" value="Nombre de institución por defecto">
+                <button type="submit" class="btn btn-primary mt-3">Agregar Estudiante</button>
             </form>
         </section>
         <section class="d-flex justify-content-center">
-            <button id="btnProductos" class="btn btn-primary my-3">Consultar productos</button>
+            <label for="ordenar">Ordenar por:</label>
+            <select id="ordenar">
+                <option value="nombre">Nombre</option>
+                <option value="institucion">Institución</option>
+            </select>
+            <button id="ordenarBtn" class="btn btn-primary my-3">Ordenar</button>
         </section>
-        <section id="datosClima">
+        <section id="datosEstudiantes">
             <table class="table w-50 m-auto">
                 <thead>
                     <tr>
                         <th>Código</th>
-                        <th>Imágen</th>
                         <th>Nombre</th>
-                        <th>Existencias</th>
-                        <th>Precios</th>
+                        <th>Institución</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-
                 </tbody>
             </table>
         </section>
     </main>
     <script>
-        btnProductos.addEventListener('click', ()=>{
-            fetch('http://localhost:3000/productos')
-                .then(respuesta=>respuesta.json())
-                .then(data=>{
-                    console.log(data)
+        document.getElementById("ordenarBtn").addEventListener("click", () => {
+            let ordenarPor = document.getElementById("ordenar").value;
+            fetch("http://localhost:3000/estudiantes")
+                .then(respuesta => respuesta.json())
+                .then(data => {
+                    let estudiantes = data.estudiantes;
+
+                    // Ordenar por nombre alfabéticamente
+                    if (ordenarPor === "nombre") {
+                        estudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    }
+                    // Ordenar por institución, agrupando los estudiantes por institución
+                    else if (ordenarPor === "institucion") {
+                        let instituciones = {};
+                        estudiantes.forEach(estudiante => {
+                            if (!instituciones[estudiante.institucion]) {
+                                instituciones[estudiante.institucion] = [estudiante];
+                            } else {
+                                instituciones[estudiante.institucion].push(estudiante);
+                            }
+                        });
+                        estudiantes = [];
+                        for (let institucion in instituciones) {
+                            instituciones[institucion].forEach(estudiante => {
+                                estudiantes.push(estudiante);
+                        });
+                      }
+                    }
+
+                    // Construir la tabla ordenada
                     let template = "";
-                    data.productos.forEach(producto=>{
+                    estudiantes.forEach(estudiante => {
                         template += `
                         <tr>
-                            <th>${producto.codigo}</th>
-                            <td><img src="${producto.imagen}" alt="${producto.nombre}"></td>
-                            <td>${producto.nombre}</td>
-                            <td>${producto.existencias}</td>
-                            <td>${producto.precio}</td>
+                            <th>${estudiante.codigo}</th>
+                            <td>${estudiante.nombre}</td>
+                            <td>${estudiante.institucion}</td>
                         </tr>
-                        `
+                        `;
                     });
-                    document.querySelector("#tableBody").innerHTML = template;
-                }).catch(error=>{
-                    console.log(error);
-                });
-        });
-    </script>
+                    document.getElementById("tableBody").innerHTML = template;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                    });
+    </script>   
 </body>
 </html>

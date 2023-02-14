@@ -1,0 +1,48 @@
+{
+    "estudiantes": [
+        {
+            "codigo": "21b41c",
+            "nombre": "daniel"
+        },
+        {
+            "codigo": "965ccc",
+            "nombre": "sebastián",
+            "institucion": "u de valparaíso"
+        },
+        {
+            "codigo": "634bbb",
+            "nombre": "Betty",
+            "institucion": "u de chile"
+        },
+        {
+            "codigo": "5e3cb4",
+            "nombre": "miguel",
+            "institucion": "u de chile"
+        },
+        {
+            "codigo": "a6d819",
+            "nombre": "andrés",
+            "institucion": "u de santiago"
+        },
+        {
+            "codigo": "e4b71b",
+            "nombre": "daniela",
+            "institucion": "u de santiago"
+        },
+        {
+            "codigo": "495db1",
+            "nombre": "daniel",
+            "institucion": "u de playa ancha"
+        },
+        {
+            "codigo": "000e1e",
+            "nombre": "sebastián ",
+            "institucion": "u de santiago"
+        },
+        {
+            "codigo": "083278",
+            "nombre": "miguel",
+            "institucion": "u de santiago"
+        }
+    ]
+}
