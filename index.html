@@ -8,41 +8,40 @@
     rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    <style>
-        img{
-            width: 150px;
-            height: auto;
-        }
-    </style>
-    <title>Listado de estudiante e instituciones</title>
+    <title>Lista de Películas y Series</title>
 </head>
 <body>
-    <h1 class="text-center">Lista de Estudiantes e Instituciones</h1>
+    <h1 class="text-center">Lista de Películas y Series</h1>
     <main class="container">
-        <section id="addProducto">
-            <form action="http://localhost:3000/estudiantes" method="POST">
-                <label for="nombre" class="form-label">Nombre:</label>
+        <section id="addPelicula">
+            <form action="http://localhost:3000/peliculas" method="POST">
+                <label for="nombre" class="form-label">Nombre Película:</label>
                 <input type="text" name="nombre" class="form-control" value="Nombre por defecto">
-                <label for="institucion" class="form-label">Institución:</label>
-                <input type="text" name="institucion" class="form-control" value="Nombre de institución por defecto">
-                <button type="submit" class="btn btn-primary mt-3">Agregar Estudiante</button>
+                <label for="director" class="form-label">Director:</label>
+                <input type="text" name="director" class="form-control" value="Nombre de Director por defecto">
+                <label for="añoestreno" class="form-label">Año de Estreno:</label>
+                <input type="number" name="añoestreno" class="form-control" value="Año de Estreno por defecto">
+                <button type="submit" class="btn btn-primary mt-3">Agregar Película</button>
             </form>
         </section>
         <section class="d-flex justify-content-center">
             <label for="ordenar">Ordenar por:</label>
             <select id="ordenar">
                 <option value="nombre">Nombre</option>
-                <option value="institucion">Institución</option>
+                <option value="institucion">Año de Estreno</option>
             </select>
-            <button id="ordenarBtn" class="btn btn-primary my-3">Ordenar</button>
+            <button id="ordenarBtn1" class="btn btn-primary my-3">Ordenar Película</button>
+            <button id="ordenarBtn2" class="btn btn-primary my-3">Ordenar Serie</button>
         </section>
-        <section id="datosEstudiantes">
+        <section id="datosPeliculas">
             <table class="table w-50 m-auto">
                 <thead>
                     <tr>
                         <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Institución</th>
+                        <th>Nombre Película</th>
+                        <th>Director</th>
+                        <th>Año de Estreno</th>
+                        <th>Temporadas</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -50,44 +49,49 @@
             </table>
         </section>
     </main>
+    <main class="container">
+        <section id="addSerie">
+            <form action="http://localhost:3000/series" method="POST">
+                <label for="nombre" class="form-label">Nombre Serie:</label>
+                <input type="text" name="nombre" class="form-control" value="Nombre por defecto">
+                <label for="director" class="form-label">Director:</label>
+                <input type="text" name="director" class="form-control" value="Nombre de Director por defecto">
+                <label for="añoestreno" class="form-label">Año de Estreno:</label>
+                <input type="number" name="añoestreno" class="form-control" value="Año de Estreno por defecto">
+                <label for="temporadas" class="form-label">Número de Temporadas:</label>
+                <input type="number" name="temporadas" class="form-control" value="Numero de Temporadas por defecto">
+                <button type="submit" class="btn btn-primary mt-3">Agregar Serie</button>
+            </form>
+        </section>
+
+    
+    </main>
     <script>
-        document.getElementById("ordenarBtn").addEventListener("click", () => {
+        document.getElementById("ordenarBtn1").addEventListener("click", () => {
             let ordenarPor = document.getElementById("ordenar").value;
-            fetch("http://localhost:3000/estudiantes")
+            fetch("http://localhost:3000/peliculas")
                 .then(respuesta => respuesta.json())
                 .then(data => {
-                    let estudiantes = data.estudiantes;
+                    let peliculas = data.peliculas;
 
                     // Ordenar por nombre alfabéticamente
                     if (ordenarPor === "nombre") {
-                        estudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        peliculas.sort((a, b) => a.nombre.localeCompare(b.nombre));
                     }
-                    // Ordenar por institución, agrupando los estudiantes por institución
-                    else if (ordenarPor === "institucion") {
-                        let instituciones = {};
-                        estudiantes.forEach(estudiante => {
-                            if (!instituciones[estudiante.institucion]) {
-                                instituciones[estudiante.institucion] = [estudiante];
-                            } else {
-                                instituciones[estudiante.institucion].push(estudiante);
-                            }
-                        });
-                        estudiantes = [];
-                        for (let institucion in instituciones) {
-                            instituciones[institucion].forEach(estudiante => {
-                                estudiantes.push(estudiante);
-                        });
-                      }
+                    // Ordenar por año de estreno
+                    else if (ordenarPor === "añoestreno") {
+                        peliculas.sort((a, b) => a.añoestreno - b.añoestreno);
                     }
 
                     // Construir la tabla ordenada
                     let template = "";
-                    estudiantes.forEach(estudiante => {
+                    peliculas.forEach(pelicula => {
                         template += `
                         <tr>
-                            <th>${estudiante.codigo}</th>
-                            <td>${estudiante.nombre}</td>
-                            <td>${estudiante.institucion}</td>
+                            <th>${pelicula.codigo}</th>
+                            <td>${pelicula.nombre}</td>
+                            <td>${pelicula.director}</td>
+                            <td>${pelicula.añoestreno}</td>
                         </tr>
                         `;
                     });
@@ -97,6 +101,43 @@
                         console.log(error);
                     });
                     });
-    </script>   
+    </script>
+        <script>
+            document.getElementById("ordenarBtn2").addEventListener("click", () => {
+                let ordenarPor = document.getElementById("ordenar").value;
+                fetch("http://localhost:3000/series")
+                    .then(respuesta => respuesta.json())
+                    .then(data => {
+                        let series = data.series;
+    
+                        // Ordenar por nombre alfabéticamente
+                        if (ordenarPor === "nombre") {
+                            series.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        }
+                        // Ordenar por año de estreno
+                        else if (ordenarPor === "añoestreno") {
+                            series.sort((a, b) => a.añoestreno - b.añoestreno);
+                        }
+    
+                        // Construir la tabla ordenada
+                        let template = "";
+                        series.forEach(serie => {
+                            template += `
+                            <tr>
+                                <th>${serie.codigo}</th>
+                                <td>${serie.nombre}</td>
+                                <td>${serie.director}</td>
+                                <td>${serie.añoestreno}</td>
+                                <td>${serie.temporadas}</td>
+                            </tr>
+                            `;
+                        });
+                        document.getElementById("tableBody").innerHTML = template;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                        });
+        </script>      
 </body>
 </html>

@@ -1,0 +1,40 @@
+{
+    "peliculas": [
+        {
+            "codigo": "21b41c",
+            "nombre": "daniel",
+            "director": "",
+            "añoestreno": "2022"
+        },
+        {
+            "codigo": "360504",
+            "nombre": "Nombre por defecto",
+            "director": "Nombre de Director por defecto",
+            "añoestreno": ""
+        },
+        {
+            "codigo": "e2b5f3",
+            "nombre": "Star Wars",
+            "director": "George Lucas",
+            "añoestreno": "1977"
+        },
+        {
+            "codigo": "c03a43",
+            "nombre": "IT",
+            "director": "Andrés Muschietti",
+            "añoestreno": "2017"
+        },
+        {
+            "codigo": "ea9019",
+            "nombre": "Sonrié",
+            "director": "Parker Finn",
+            "añoestreno": "2022"
+        },
+        {
+            "codigo": "ee5a6f",
+            "nombre": "La guía perversa de la ideología",
+            "director": "Sophie Fiennes",
+            "añoestreno": "2012"
+        }
+    ]
+}

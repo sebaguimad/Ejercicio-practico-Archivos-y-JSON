@@ -9,67 +9,66 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded());
 
-
+// PARA PELÍCULAS:
 // Para procesar información del post:
-
-app.get("/estudiantes", (req, res) => {
-    fs.readFile("estudiantes.json", "utf8", (error, data) => {
+app.get("/peliculas", (req, res) => {
+    fs.readFile("peliculas.json", "utf8", (error, data) => {
         if(error){
-            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer los estudiantes."})
+            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las películas."})
         }
-        let estudiantes = JSON.parse(data);
-        res.json(estudiantes);
+        let peliculas = JSON.parse(data);
+        res.json(peliculas);
     })
 })
 
 
-
-app.post("/estudiantes", (req, res) => {
-    let {nombre, institucion} = req.body;
-    let estudianteNuevo = {
+app.post("/peliculas", (req, res) => {
+    let {nombre, director, añoestreno} = req.body;
+    let peliculaNueva = {
         codigo: uuidv4().slice(0,6),
         nombre,
-        institucion,
+        director,
+        añoestreno
     }
-    fs.readFile("estudiantes.json", "utf8", (error, data) => {
+    fs.readFile("peliculas.json", "utf8", (error, data) => {
         if(error){
-            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer los estudiantes."})
+            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las películas."})
         }
-        let estudiantes = JSON.parse(data);
-        estudiantes.estudiantes.push(estudianteNuevo);
+        let peliculas = JSON.parse(data);
+        peliculas.peliculas.push(peliculaNueva);
 
-        fs.writeFile("estudiantes.json", JSON.stringify(estudiantes, null, 4), "utf8", (error) => {
+        fs.writeFile("peliculas.json", JSON.stringify(peliculas, null, 4), "utf8", (error) => {
             if(error){
-                return res.status(500).json({error:500, message:"Ha ocurrido un error al leer los estudiantes."})
+                return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las películas."})
             }
-            res.status(201).json(estudianteNuevo);
+            res.status(201).json(peliculaNueva);
         })
     })
 })
 
 
 // Para usarlo el valor :nombre debe ser escrito en la URL como, por ejemplo: /estudiantes/daniel
-app.delete("/estudiantes/:nombre", (req, res) => {
+app.delete("/peliculas/:nombre", (req, res) => {
     const nombre = req.params.nombre;
-    console.log("Deleting student with name:", nombre);
-    fs.readFile("estudiantes.json", "utf8", (error, data) => {
+    console.log("Borrando película con nombre:", nombre);
+    fs.readFile("peliculas.json", "utf8", (error, data) => {
       if (error) {
-        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer los estudiantes." });
+        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer las películas." });
       }
   
-      const estudiantes = JSON.parse(data);
-      console.log("Current estudiantes array:", estudiantes);
-      const estudianteIndex = estudiantes.estudiantes.findIndex(estudiante => estudiante.nombre === nombre);
+      const peliculas = JSON.parse(data);
+      console.log("Matriz de películas actuales:", peliculas);
+      const peliculaIndex = peliculas.peliculas.findIndex(pelicula => pelicula.nombre === nombre);
   
-      if (estudianteIndex === -1) {
-        return res.status(404).json({ error: 404, message: "El estudiante no ha sido encontrado." });
+      if (peliculaIndex === -1) {
+        return res.status(404).json({ error: 404, message: "La película no ha sido encontrada." });
       }
   
-      estudiantes.estudiantes.splice(estudianteIndex, 1);
+      peliculas.peliculas.splice(peliculaIndex, 1);
   
-      fs.writeFile("estudiantes.json", JSON.stringify(estudiantes, null, 4), "utf8", (error) => {
+      fs.writeFile("peliculas.json", JSON.stringify(peliculas, null, 4), "utf8", (error) => {
         if (error) {
-          return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir los estudiantes." });
+          return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir las películas." });
         }
         res.sendStatus(204);
       });
@@ -78,7 +77,77 @@ app.delete("/estudiantes/:nombre", (req, res) => {
   
 
 
+// PARA SERIES:
+app.get("/series", (req, res) => {
+    fs.readFile("series.json", "utf8", (error, data) => {
+        if(error){
+            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las series."})
+        }
+        let series = JSON.parse(data);
+        res.json(series);
+    })
+})
 
+
+app.post("/series", (req, res) => {
+    let {nombre, director, añoestreno, temporadas} = req.body;
+    let serieNueva = {
+        codigo: uuidv4().slice(0,6),
+        nombre,
+        director,
+        añoestreno,
+        temporadas
+    }
+    fs.readFile("series.json", "utf8", (error, data) => {
+        if(error){
+            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las series."})
+        }
+        let series = JSON.parse(data);
+        series.series.push(serieNueva);
+
+        fs.writeFile("series.json", JSON.stringify(series, null, 4), "utf8", (error) => {
+            if(error){
+                return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las series."})
+            }
+            res.status(201).json(serieNueva);
+        })
+    })
+})
+
+
+// Para usarlo el valor :nombre debe ser escrito en la URL como, por ejemplo: /estudiantes/daniel
+app.delete("/series/:nombre", (req, res) => {
+    const nombre = req.params.nombre;
+    console.log("Borrando serie con nombre:", nombre);
+    fs.readFile("series.json", "utf8", (error, data) => {
+      if (error) {
+        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer las series." });
+      }
+  
+      const series = JSON.parse(data);
+      console.log("Matriz de series actuales:", series);
+      const serieIndex = series.series.findIndex(serie => serie.nombre === nombre);
+  
+      if (serieIndex === -1) {
+        return res.status(404).json({ error: 404, message: "La serie no ha sido encontrada." });
+      }
+  
+      series.series.splice(serieIndex, 1);
+  
+      fs.writeFile("series.json", JSON.stringify(series, null, 4), "utf8", (error) => {
+        if (error) {
+          return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir las series." });
+        }
+        res.sendStatus(204);
+      });
+    });
+});
+
+
+
+
+
+//
 app.all("*", (req, res) => {
     res.status(404).send({code: 404, message: "Ruta no habilitada"});
 })

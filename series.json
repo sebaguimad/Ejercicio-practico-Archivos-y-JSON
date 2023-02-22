@@ -1,0 +1,32 @@
+{
+    "series": [
+        {
+            "codigo": "6719eb",
+            "nombre": "pokemon",
+            "director": "satoshi",
+            "añoestreno": "1994",
+            "temporadas": "10"
+        },
+        {
+            "codigo": "843ef4",
+            "nombre": "caballeros del zodiaco",
+            "director": "niiidea",
+            "añoestreno": "1996",
+            "temporadas": "13"
+        },
+        {
+            "codigo": "c61e2f",
+            "nombre": "conan",
+            "director": "niiidea",
+            "añoestreno": "1999",
+            "temporadas": "13"
+        },
+        {
+            "codigo": "c97c63",
+            "nombre": "devilman",
+            "director": "niideajapones",
+            "añoestreno": "1980",
+            "temporadas": "6"
+        }
+    ]
+}
