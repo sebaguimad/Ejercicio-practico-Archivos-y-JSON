@@ -1,0 +1,25 @@
+{
+    "clientes": [
+        {
+            "codigo": "c09ef5",
+            "id": "19789708-6",
+            "nombre": "Nombre por defecto",
+            "apellido": "Apellido por defecto",
+            "cuentaahorro": ""
+        },
+        {
+            "codigo": "77cb97",
+            "id": "18798709-1",
+            "nombre": "Nombre por defecto",
+            "apellido": "Apellido por defecto",
+            "cuentaahorro": ""
+        },
+        {
+            "codigo": "f2c15a",
+            "id": "19789709-1",
+            "nombre": "Nombre por defecto",
+            "apellido": "Apellido por defecto",
+            "cuentaahorro": ""
+        }
+    ]
+}

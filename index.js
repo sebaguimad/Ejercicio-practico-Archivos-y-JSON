@@ -1,150 +1,120 @@
-import express from 'express';
-import fs from 'fs';
-import cors from 'cors';
-import { v4 as uuidv4 } from 'uuid';
+const express = require('express');
+const fs = require('fs');
+const cors = require('cors');
+const { v4: uuidv4 } = require('uuid');
+const methodOverride = require('method-override');
+const { response } = require('express');
+const bodyParser = require('body-parser');
 
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(methodOverride("_method", {methods: ["POST", "GET"]}));
 
-// PARA PELÍCULAS:
+
+// PARA CLIENTES:
 // Para procesar información del post:
-app.get("/peliculas", (req, res) => {
-    fs.readFile("peliculas.json", "utf8", (error, data) => {
+app.get("/clientes", (req, res) => {
+    fs.readFile("clientes.json", "utf8", (error, data) => {
         if(error){
-            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las películas."})
+            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer los clientes."})
         }
-        let peliculas = JSON.parse(data);
-        res.json(peliculas);
+        let clientes = JSON.parse(data);
+        res.json(clientes);
     })
 })
 
 
-app.post("/peliculas", (req, res) => {
-    let {nombre, director, añoestreno} = req.body;
-    let peliculaNueva = {
+app.post("/clientes", (req, res) => {
+    let {id, nombre, apellido, cuentaahorro} = req.body;
+    let clienteNuevo = {
         codigo: uuidv4().slice(0,6),
+        id,
         nombre,
-        director,
-        añoestreno
+        apellido,
+        cuentaahorro
     }
-    fs.readFile("peliculas.json", "utf8", (error, data) => {
+    fs.readFile("clientes.json", "utf8", (error, data) => {
         if(error){
-            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las películas."})
+            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer los clientes."})
         }
-        let peliculas = JSON.parse(data);
-        peliculas.peliculas.push(peliculaNueva);
+        let clientes = JSON.parse(data);
+        clientes.clientes.push(clienteNuevo);
 
-        fs.writeFile("peliculas.json", JSON.stringify(peliculas, null, 4), "utf8", (error) => {
+        fs.writeFile("clientes.json", JSON.stringify(clientes, null, 4), "utf8", (error) => {
             if(error){
-                return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las películas."})
+                return res.status(500).json({error:500, message:"Ha ocurrido un error al leer los clientes."})
             }
-            res.status(201).json(peliculaNueva);
+            res.status(201).json(clienteNuevo);
         })
     })
 })
 
-
-// Para usarlo el valor :nombre debe ser escrito en la URL como, por ejemplo: /estudiantes/daniel
-app.delete("/peliculas/:nombre", (req, res) => {
-    const nombre = req.params.nombre;
-    console.log("Borrando película con nombre:", nombre);
-    fs.readFile("peliculas.json", "utf8", (error, data) => {
+app.delete("/clientes/:id", (req, res) => {
+    const id = req.params.id;
+    console.log("Borrando cliente con id:", id);
+    fs.readFile("clientes.json", "utf8", (error, data) => {
       if (error) {
-        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer las películas." });
+        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer los clientes." });
       }
   
-      const peliculas = JSON.parse(data);
-      console.log("Matriz de películas actuales:", peliculas);
-      const peliculaIndex = peliculas.peliculas.findIndex(pelicula => pelicula.nombre === nombre);
+      const clientes = JSON.parse(data);
+      console.log("Matriz de clientes actuales:", clientes);
+      const clienteIndex = clientes.clientes.findIndex(cliente => cliente.id === id);
   
-      if (peliculaIndex === -1) {
-        return res.status(404).json({ error: 404, message: "La película no ha sido encontrada." });
+      if (clienteIndex === -1) {
+        return res.status(404).json({ error: 404, message: "El cliente no ha sido encontrado." });
       }
   
-      peliculas.peliculas.splice(peliculaIndex, 1);
+      const cliente = clientes.clientes[clienteIndex];
+      clientes.clientes.splice(clienteIndex, 1);
   
-      fs.writeFile("peliculas.json", JSON.stringify(peliculas, null, 4), "utf8", (error) => {
+      fs.writeFile("clientes.json", JSON.stringify(clientes, null, 4), "utf8", (error) => {
         if (error) {
-          return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir las películas." });
+          return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir los clientes." });
         }
-        res.sendStatus(204);
+        console.log("Cliente eliminado:", cliente);
+        res.json(cliente);
       });
     });
 });
   
 
-
-// PARA SERIES:
-app.get("/series", (req, res) => {
-    fs.readFile("series.json", "utf8", (error, data) => {
-        if(error){
-            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las series."})
-        }
-        let series = JSON.parse(data);
-        res.json(series);
-    })
-})
-
-
-app.post("/series", (req, res) => {
-    let {nombre, director, añoestreno, temporadas} = req.body;
-    let serieNueva = {
-        codigo: uuidv4().slice(0,6),
-        nombre,
-        director,
-        añoestreno,
-        temporadas
+app.delete('/clientes/:id/cuentaahorro', (req, res) => {
+  const id = req.params.id;
+  console.log("Eliminando cuenta de ahorro del cliente con id:", id);
+  fs.readFile("clientes.json", "utf8", (error, data) => {
+    if (error) {
+      return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer los clientes." });
     }
-    fs.readFile("series.json", "utf8", (error, data) => {
-        if(error){
-            return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las series."})
-        }
-        let series = JSON.parse(data);
-        series.series.push(serieNueva);
 
-        fs.writeFile("series.json", JSON.stringify(series, null, 4), "utf8", (error) => {
-            if(error){
-                return res.status(500).json({error:500, message:"Ha ocurrido un error al leer las series."})
-            }
-            res.status(201).json(serieNueva);
-        })
-    })
-})
+    const clientes = JSON.parse(data);
+    console.log("Matriz de clientes actuales:", clientes);
+    const cliente = clientes.clientes.find(cliente => cliente.id === id);
 
+    if (!cliente) {
+      return res.status(404).json({ error: 404, message: "El cliente no ha sido encontrado." });
+    }
 
-// Para usarlo el valor :nombre debe ser escrito en la URL como, por ejemplo: /estudiantes/daniel
-app.delete("/series/:nombre", (req, res) => {
-    const nombre = req.params.nombre;
-    console.log("Borrando serie con nombre:", nombre);
-    fs.readFile("series.json", "utf8", (error, data) => {
+    cliente.cuentaahorro = "";
+    fs.writeFile("clientes.json", JSON.stringify(clientes, null, 4), "utf8", (error) => {
       if (error) {
-        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al leer las series." });
+        return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir los clientes." });
       }
-  
-      const series = JSON.parse(data);
-      console.log("Matriz de series actuales:", series);
-      const serieIndex = series.series.findIndex(serie => serie.nombre === nombre);
-  
-      if (serieIndex === -1) {
-        return res.status(404).json({ error: 404, message: "La serie no ha sido encontrada." });
-      }
-  
-      series.series.splice(serieIndex, 1);
-  
-      fs.writeFile("series.json", JSON.stringify(series, null, 4), "utf8", (error) => {
-        if (error) {
-          return res.status(500).json({ error: 500, message: "Ha ocurrido un error al escribir las series." });
-        }
-        res.sendStatus(204);
-      });
+      console.log("Cuenta de ahorro eliminada del cliente con id:", id);
+      res.redirect('/clientes');
     });
+  });
 });
 
 
 
+  
+  
+  
 
 
 //

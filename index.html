@@ -8,40 +8,55 @@
     rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    <title>Lista de Películas y Series</title>
+    <title>Lista de Clientes y Cuentas</title>
 </head>
 <body>
-    <h1 class="text-center">Lista de Películas y Series</h1>
+    <h1 class="text-center">Lista de Clientes y Cuentas</h1>
     <main class="container">
-        <section id="addPelicula">
-            <form action="http://localhost:3000/peliculas" method="POST">
-                <label for="nombre" class="form-label">Nombre Película:</label>
+        <section id="addCliente">
+            <form action="http://localhost:3000/clientes" method="POST">
+                <label for="id" class="form-label">RUT:</label>
+                <input type="text" name="id" class="form-control" value="RUT por defecto">
+                <label for="nombre" class="form-label">Nombre Cliente:</label>
                 <input type="text" name="nombre" class="form-control" value="Nombre por defecto">
-                <label for="director" class="form-label">Director:</label>
-                <input type="text" name="director" class="form-control" value="Nombre de Director por defecto">
-                <label for="añoestreno" class="form-label">Año de Estreno:</label>
-                <input type="number" name="añoestreno" class="form-control" value="Año de Estreno por defecto">
-                <button type="submit" class="btn btn-primary mt-3">Agregar Película</button>
+                <label for="apellido" class="form-label">Apellido Cliente:</label>
+                <input type="text" name="apellido" class="form-control" value="Apellido por defecto">
+                <label for="cuentaahorro" class="form-label">Cuenta de Ahorro:</label>
+                <input type="text" name="cuentaahorro" class="form-control" value="Cuenta básica o cuenta premium.">
+                <button type="submit" class="btn btn-primary mt-3">Agregar Cliente</button>
             </form>
         </section>
+        <section>
+            <h1>Eliminar Cliente por RUT</h1>
+            <form onsubmit="deleteCliente(); return false;">
+                <label for="id1">RUT:</label>
+                <input type="text" id="id1" name="id1">
+                <button type="submit">Eliminar cliente y todas sus cuentas</button>
+            </form>
+            
+            <form onsubmit="deleteCuentaAhorro(); return false;">
+                <label for="id2">RUT:</label>
+                <input type="text" id="id2" name="id2">
+                <button type="submit">Eliminar cuenta de ahorro</button>
+            </form>
+        </section>       
         <section class="d-flex justify-content-center">
             <label for="ordenar">Ordenar por:</label>
             <select id="ordenar">
                 <option value="nombre">Nombre</option>
                 <option value="institucion">Año de Estreno</option>
             </select>
-            <button id="ordenarBtn1" class="btn btn-primary my-3">Ordenar Película</button>
-            <button id="ordenarBtn2" class="btn btn-primary my-3">Ordenar Serie</button>
+            <button id="ordenarBtn1" class="btn btn-primary my-3">Ordenar Clientes</button>
         </section>
         <section id="datosPeliculas">
             <table class="table w-50 m-auto">
                 <thead>
                     <tr>
                         <th>Código</th>
-                        <th>Nombre Película</th>
-                        <th>Director</th>
-                        <th>Año de Estreno</th>
-                        <th>Temporadas</th>
+                        <th>RUT</th>
+                        <th>Nombre Cliente</th>
+                        <th>Apellido Cliente</th>
+                        <th>Cuenta de Ahorro</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -49,49 +64,33 @@
             </table>
         </section>
     </main>
-    <main class="container">
-        <section id="addSerie">
-            <form action="http://localhost:3000/series" method="POST">
-                <label for="nombre" class="form-label">Nombre Serie:</label>
-                <input type="text" name="nombre" class="form-control" value="Nombre por defecto">
-                <label for="director" class="form-label">Director:</label>
-                <input type="text" name="director" class="form-control" value="Nombre de Director por defecto">
-                <label for="añoestreno" class="form-label">Año de Estreno:</label>
-                <input type="number" name="añoestreno" class="form-control" value="Año de Estreno por defecto">
-                <label for="temporadas" class="form-label">Número de Temporadas:</label>
-                <input type="number" name="temporadas" class="form-control" value="Numero de Temporadas por defecto">
-                <button type="submit" class="btn btn-primary mt-3">Agregar Serie</button>
-            </form>
-        </section>
-
-    
-    </main>
     <script>
         document.getElementById("ordenarBtn1").addEventListener("click", () => {
             let ordenarPor = document.getElementById("ordenar").value;
-            fetch("http://localhost:3000/peliculas")
+            fetch("http://localhost:3000/clientes")
                 .then(respuesta => respuesta.json())
                 .then(data => {
-                    let peliculas = data.peliculas;
+                    let clientes = data.clientes;
 
                     // Ordenar por nombre alfabéticamente
                     if (ordenarPor === "nombre") {
-                        peliculas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        clientes.sort((a, b) => a.nombre.localeCompare(b.nombre));
                     }
                     // Ordenar por año de estreno
-                    else if (ordenarPor === "añoestreno") {
-                        peliculas.sort((a, b) => a.añoestreno - b.añoestreno);
+                    else if (ordenarPor === "cuentaahorro") {
+                        clientes.sort((a, b) => a.cliente.localeCompare(b.cliente));
                     }
 
                     // Construir la tabla ordenada
                     let template = "";
-                    peliculas.forEach(pelicula => {
+                    clientes.forEach(cliente => {
                         template += `
                         <tr>
-                            <th>${pelicula.codigo}</th>
-                            <td>${pelicula.nombre}</td>
-                            <td>${pelicula.director}</td>
-                            <td>${pelicula.añoestreno}</td>
+                            <th>${cliente.codigo}</th>
+                            <td>${cliente.id}</td>
+                            <td>${cliente.nombre}</td>
+                            <td>${cliente.apellido}</td>
+                            <td>${cliente.cuentaahorro}</td>
                         </tr>
                         `;
                     });
@@ -102,42 +101,51 @@
                     });
                     });
     </script>
+    <script src="./index.js"></script>
+    <script>
+        function deleteCliente(){
+            let id = document.getElementById("id1").value;
+            fetch(`http://localhost:3000/clientes/${id}`, {
+            method: "DELETE",
+            })
+            .then((response)=>{
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((json)=>{
+            console.log(json);
+            alert("Cliente eliminado exitosamente.");
+            })
+            .catch((error)=>{
+                console.error("Error al eliminar el cliente:", error);
+                alert("Error al eliminar el cliente.");
+            });
+        }
+    </script>
         <script>
-            document.getElementById("ordenarBtn2").addEventListener("click", () => {
-                let ordenarPor = document.getElementById("ordenar").value;
-                fetch("http://localhost:3000/series")
-                    .then(respuesta => respuesta.json())
-                    .then(data => {
-                        let series = data.series;
-    
-                        // Ordenar por nombre alfabéticamente
-                        if (ordenarPor === "nombre") {
-                            series.sort((a, b) => a.nombre.localeCompare(b.nombre));
-                        }
-                        // Ordenar por año de estreno
-                        else if (ordenarPor === "añoestreno") {
-                            series.sort((a, b) => a.añoestreno - b.añoestreno);
-                        }
-    
-                        // Construir la tabla ordenada
-                        let template = "";
-                        series.forEach(serie => {
-                            template += `
-                            <tr>
-                                <th>${serie.codigo}</th>
-                                <td>${serie.nombre}</td>
-                                <td>${serie.director}</td>
-                                <td>${serie.añoestreno}</td>
-                                <td>${serie.temporadas}</td>
-                            </tr>
-                            `;
-                        });
-                        document.getElementById("tableBody").innerHTML = template;
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                        });
-        </script>      
+            function deleteCuentaAhorro(){
+                let id = document.getElementById("id2").value;
+                fetch(`http://localhost:3000/clientes/${id}/cuentaahorro`, {
+                    method: "DELETE",
+                })
+                .then((response)=>{
+                    console.log("Status de respuesta:", response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((json)=>{
+                    console.log("Respuesta JSON:", json);
+                    alert("Cuenta eliminada exitosamente.");
+                })
+                .catch((error)=>{
+                    console.error("Error al eliminar cuenta:", error);
+                    alert("Error al eliminar cuenta.");
+                });
+            }
+        </script>
 </body>
 </html>
